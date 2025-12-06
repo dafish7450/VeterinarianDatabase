@@ -1,0 +1,22 @@
+<h2>New Visit Entry</h2>
+<form method="POST">
+    
+    <label for="petId">Pet:</label>
+    <select name="petID" required>
+        {% for pet in pets %}
+            <option value="{{ pet.petID }}">{{ pet.petName }} (ID: {{ pet.petID }})</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label for="vetId">Verinarian:</label>
+    <select name="vetID" required>
+        {% for vet in vets %}
+            <option value="{{ vet.vetID }}">{{ vet.vetName }} (ID: {{ vet.vetID }})</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label for="date">Date:</label>
+    <input type="text" name="date" required><br><br>
+
+    <button type="submit">Submit</button>
+</form>

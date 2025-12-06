@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Company Table</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 8px;
+        }
+        .top-button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px; /* adjust as needed */
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            width: 200px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-button-container">
+        <form action="{{ url_for('home') }}" method="get">
+            <button type="submit">Home</button>
+          </form>
+        <form action="{{ url_for('new_company') }}" method="get">
+            <button type="submit">Add Company</button>
+        </form>
+    </div>
+    <h1>Company Table</h1>
+    <table>
+        <tr>
+            <th>More Info</th>  
+            {% for col in columns %}
+                <th>{{ col }}</th>
+            {% endfor %}
+        </tr>
+        {% for company in companies %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('view_details', id_type='company', id_value=company.companyID) }}">x</a>
+                </td>
+                {% for col in columns %}
+                    <td>{{ getattr(company, col) }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

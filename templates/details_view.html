@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ id_type|capitalize }} Details: {{ id_value }}</title>
+    <style>
+        .top-button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px; /* adjust as needed */
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            width: 200px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-button-container">
+        <form action="{{ url_for('home') }}" method="get">
+            <button type="submit">Home</button>
+          </form>
+    </div>
+    
+    <h1>{{ id_type|capitalize }} ID: {{ id_value }}</h1>
+
+
+
+{% if id_type == 'owner' %}
+    {# Show owner, pets, visits, billing #}
+    {# ... Owner Table ... #}
+        <h2>Owner Info</h2>
+        <table border="1">
+            <tr><th>ID</th><th>First Name</th><th>Last Name</th><th>Email</th></tr>
+            {% for owner in owners %}
+                {% if  owner.ownerID == id_value %}
+                    <tr><td>{{ owner.ownerID }}</td><td>{{ owner.ownerFirst }}</td><td>{{ owner.ownerLast }}</td><td>{{ owner.ownerEmail }}</td></tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+    {# ... Pets Table ... #}
+        <h2>Pets</h2>
+        <table border="1">
+            <tr><th>ID</th><th>Name</th><th>Weight</th><th>Date Of Birth</th><th>Owner ID</th></tr>
+            {% for pet in pets %}
+                {% if (pet.ownerID == id_value)%}
+                    <tr><td>{{ pet.petID }}</td><td>{{ pet.petName }}</td><td>{{ pet.petWeight }}</td><td>{{ pet.petDOB }}</td><td>{{ pet.ownerID }}</td></tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+    {# Collect petIDs for this owner #}
+    {% set owner_pets_ids = [] %}
+    {% for pet in pets %}
+        {% if pet.ownerID == id_value %}
+            {% do owner_pets_ids.append(pet.petID) %}
+        {% endif %}
+    {% endfor %}
+    {# ... Visits Table ... #}
+        <h2>Visits</h2>
+        <table border="1">
+            <tr><th>ID</th><th>Pet ID</th><th>Vet ID</th><th>Date</th></tr>
+            {% for visit in visits %}
+                {% if (visit.petID in owner_pets_ids) %}
+                    <tr>
+                        <td>{{ visit.visitID }}</td><td>{{ visit.petID }}</td>
+                        <td>{{ visit.vetID }}</td><td>{{ visit.date }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+    {# ... Billing Table ... #}
+        <h2>Billing Records</h2>
+        <table border="1">
+            <tr><th>ID</th><th>Amount</th><th>Address</th><th>Insurance</th><th>Owner ID</th><th>Visit ID</th></tr>
+            {% for bill in billings %}
+                {% if (bill.ownerID == id_value)%}
+                    <tr>
+                        <td>{{ bill.receiptID }}</td><td>{{ bill.billAmount }}</td><td>{{ bill.billAddress }}</td>
+                        <td>{{ bill.billInsurance }}</td><td>{{ bill.ownerID }}</td><td>{{ bill.visitID }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+
+{% elif id_type == 'pet' %}
+    {# Show pet, visits #}
+    {# ... Pets Table ... #}
+        <h2>Pets</h2>
+        <table border="1">
+            <tr><th>ID</th><th>Name</th><th>Weight</th><th>Date Of Birth</th><th>Owner ID</th></tr>
+            {% for pet in pets %}
+                {% if (pet.petID == id_value)%}
+                    <tr><td>{{ pet.petID }}</td><td>{{ pet.petName }}</td><td>{{ pet.petWeight }}</td><td>{{ pet.petDOB }}</td><td>{{ pet.ownerID }}</td></tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+    {# ... Visits Table ... #}
+        <h2>Visits</h2>
+        <table border="1">
+            <tr><th>ID</th><th>Pet ID</th><th>Vet ID</th><th>Date</th></tr>
+            {% for visit in visits %}
+                {% if (visit.petID == id_value) %}
+                    <tr>
+                        <td>{{ visit.visitID }}</td><td>{{ visit.petID }}</td>
+                        <td>{{ visit.vetID }}</td><td>{{ visit.date }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+
+{% elif id_type == 'visit' %}
+    {# Show visit, billing #}
+    {# ... Visits Table ... #}
+        <h2>Visits</h2>
+        <table border="1">
+            <tr><th>ID</th><th>Pet ID</th><th>Vet ID</th><th>Date</th></tr>
+            {% for visit in visits %}
+                {% if (visit.visitID == id_value) %}
+                    <tr>
+                        <td>{{ visit.visitID }}</td><td>{{ visit.petID }}</td>
+                        <td>{{ visit.vetID }}</td><td>{{ visit.date }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+    {# ... Billing Table ... #}
+        <h2>Billing Records</h2>
+        <table border="1">
+            <tr><th>ID</th><th>Amount</th><th>Address</th><th>Insurance</th><th>Owner ID</th><th>Visit ID</th></tr>
+            {% for bill in billings %}
+                {% if (bill.visitID == id_value)%}
+                    <tr>
+                        <td>{{ bill.receiptID }}</td><td>{{ bill.billAmount }}</td><td>{{ bill.billAddress }}</td>
+                        <td>{{ bill.billInsurance }}</td><td>{{ bill.ownerID }}</td><td>{{ bill.visitID }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+    
+
+{% elif id_type == 'vet' %}
+    {# Show vet and visits #}
+    {# ... Veterinarians Table ... #}
+        <h2>Veterinarians</h2>
+        <table border="1">
+            <tr><th>ID</th><th>Name</th><th>Clinic</th></tr>
+            {% for vet in veterinarians %}
+                {% if vet.vetID == id_value %}
+                    <tr><td>{{ vet.vetID }}</td><td>{{ vet.vetName }}</td><td>{{ vet.clinicID }}</td></tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+    {# ... Visits Table ... #}
+        <h2>Visits</h2>
+        <table border="1">
+            <tr><th>ID</th><th>Pet ID</th><th>Vet ID</th><th>Date</th></tr>
+            {% for visit in visits %}
+                {% if (visit.vetID == id_value) %}
+                    <tr>
+                        <td>{{ visit.visitID }}</td><td>{{ visit.petID }}</td>
+                        <td>{{ visit.vetID }}</td><td>{{ visit.date }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+
+{% elif id_type == 'clinic' %}
+    {# Show clinic and visits #}
+    {# ... Clinics Table ... #}
+        <h2>Clinics</h2>
+        <table border="1">
+            <tr><th>ID</th><th>Name</th><th>Address</th><th>Company ID</th></tr>
+            {% for clinic in clinics %}
+                {% if clinic.clinicID == id_value %}
+                    <tr><td>{{ clinic.clinicID }}</td><td>{{ clinic.clinicName }}</td><td>{{ clinic.clinicAddress }}</td><td>{{ clinic.companyID }}</td></tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+    {# ... Veterinarians Table ... #}
+        <h2>Veterinarians</h2>
+        <table border="1">
+            <tr><th>ID</th><th>Name</th><th>Clinic</th></tr>
+            {% for vet in veterinarians %}
+                {% if vet.clinicID == id_value %}
+                    <tr><td>{{ vet.vetID }}</td><td>{{ vet.vetName }}</td><td>{{ vet.clinicID }}</td></tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+
+    {# Collect vetIDs for this clinic #}
+    {% set clinic_vet_ids = [] %}
+    {% for vet in veterinarians %}
+        {% if vet.clinicID == id_value %}
+            {% do clinic_vet_ids.append(vet.vetID) %}
+        {% endif %}
+    {% endfor %}
+
+
+    {# ... Visits Table ... #}
+        <h2>Visits</h2>
+        <table border="1">
+            <tr><th>ID</th><th>Pet ID</th><th>Vet ID</th><th>Date</th></tr>
+            {% for visit in visits %}
+                {% if visit.vetID in clinic_vet_ids %}
+                    <tr>
+                        <td>{{ visit.visitID }}</td>
+                        <td>{{ visit.petID }}</td>
+                        <td>{{ visit.vetID }}</td>
+                        <td>{{ visit.date }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+
+    {# Collect visitIDs for those vetIDs #}
+    {% set clinic_visit_ids = [] %}
+    {% for visit in visits %}
+        {% if visit.vetID in clinic_vet_ids %}
+            {% do clinic_visit_ids.append(visit.visitID) %}
+        {% endif %}
+    {% endfor %}
+
+    {# ... Billing Table ... #}
+        <h2>Billing</h2>
+        <table border="1">
+            <tr><th>ID</th><th>Amount</th><th>Address</th><th>Insurance</th><th>Owner ID</th><th>Visit ID</th></tr>
+            {% for bill in billings %}
+                {% if bill.visitID in clinic_visit_ids%}
+                    <tr>
+                        <td>{{ bill.receiptID }}</td><td>{{ bill.billAmount }}</td><td>{{ bill.billAddress }}</td>
+                        <td>{{ bill.billInsurance }}</td><td>{{ bill.ownerID }}</td><td>{{ bill.visitID }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+            
+        </table>
+
+{% elif id_type == 'company' %}
+    {# Show company and clinics #}
+    {# ... Companies Table ... #}
+        <h2>Companies</h2>
+        <table border="1">
+            <tr><th>ID</th><th>Name</th></tr>
+            {% for company in companies %}
+                {% if company.companyID == id_value %}
+                    <tr><td>{{ company.companyID }}</td><td>{{ company.companyName }}</td></tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+    {# ... Clinics Table ... #}
+        <h2>Clinics</h2>
+        <table border="1">
+            <tr><th>ID</th><th>Name</th><th>Address</th><th>Company ID</th></tr>
+            {% for clinic in clinics %}
+                {% if clinic.companyID == id_value %}
+                    <tr><td>{{ clinic.clinicID }}</td><td>{{ clinic.clinicName }}</td><td>{{ clinic.clinicAddress }}</td><td>{{ clinic.companyID }}</td></tr>
+                {% endif %}
+            {% endfor %}
+        </table>
+{% endif %}
+
+</body>
+</html>

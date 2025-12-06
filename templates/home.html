@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 8px;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        h4 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 50px; /* space between columns */
+            margin-top: 20px;
+        }
+
+        .button-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .button-column h2 {
+            margin-bottom: 10px;
+            font-size: 18px;
+            color: #333;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            width: 200px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+  <h1>Veterinary Clinic Management</h1>
+  <h4>Georgia, Reece, and Alejandro</h4>
+
+    <div class="button-container">
+        <div class="button-column">
+            <h2>Company</h2>
+            <form action="{{ url_for('show_companies') }}" method="get">
+                <button type="submit">Company</button>
+            </form>
+            <form action="{{ url_for('show_clinics') }}" method="get">
+                <button type="submit">Clinic</button>
+            </form>
+        </div>
+        <div class="button-column">
+            <h2>Clinic</h2>
+            <form action="{{ url_for('show_vets') }}" method="get">
+                <button type="submit">Veterinarian</button>
+            </form>
+            <form action="{{ url_for('show_visits') }}" method="get">
+                <button type="submit">Visit</button>
+            </form>
+            <form action="{{ url_for('show_billing') }}" method="get">
+                <button type="submit">Billing</button>
+              </form>
+        </div>
+        <div class="button-column">
+            <h2>Client</h2>
+            <form action="{{ url_for('show_owner') }}" method="get">
+                <button type="submit">Pet Owner</button>
+            </form>
+            <form action="{{ url_for('show_pets') }}" method="get">
+                <button type="submit">Pet</button>
+              </form>
+        </div>
+
+    </div>
+
+</body>
+</html>
+

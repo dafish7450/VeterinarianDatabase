@@ -1,0 +1,14 @@
+<h2>New Vet Entry</h2>
+<form method="POST">
+    <label for="vetName">Vet Name:</label>
+    <input type="text" name="vetName" required><br><br>
+
+    <label for="clinicID">Clinic:</label>
+    <select name="clinicID" required>
+        {% for clinic in clinics %}
+            <option value="{{ clinic.clinicID }}">{{ clinic.clinicName }} (ID: {{ clinic.clinicID }})</option>
+        {% endfor %}
+    </select><br><br>
+
+    <button type="submit">Submit</button>
+</form>
